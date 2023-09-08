@@ -1,0 +1,17 @@
+babashka-bin
+clipman
+clj-kondo-bin
+downgrade
+emacs-gcc-wayland-devel-bin
+fwts-git
+google-chrome
+grimshot
+libgccjit
+liquidprompt
+spotify
+wev
+wldash-git
+yay
+zoom
+zprint-bin
+zrepl
