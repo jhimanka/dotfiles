@@ -1,0 +1,272 @@
+;; (setq  x-meta-keysym 'super
+;;        x-super-keysym 'meta)
+
+;; Always end a file with a newline
+(setq require-final-newline t)
+
+(when (featurep 'native-compile)
+  (setq native-comp-deferred-compilation t)
+  (setq native-compile-prune-cache t)
+  (setq native-comp-async-report-warnings-errors nil))
+
+;; Stop at the end of the file, not just add lines
+(setq next-line-add-newlines nil)
+
+;;(global-unset-key "\C-h")
+;;(global-set-key "\C-h" 'delete-backward-char)
+
+(global-set-key [S-down] 'scroll-up-line)
+(global-set-key [S-up] 'scroll-down-line)
+(global-set-key [nobreakspace] nil)
+
+(setq next-screen-context-lines 1)
+(setq default-major-mode 'text-mode)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+(define-key global-map "\C-c " 'set-mark-command)
+(define-key global-map "\C-co" 'occur)
+(define-key global-map "\C-x\C-b" 'electric-buffer-list)
+(define-key global-map [f2] 'save-buffer)
+(define-key global-map [f3] 'electric-buffer-list)
+(define-key global-map [f4] 'treemacs)
+(define-key global-map [(alt button1)] 'mouse-track-do-rectangle)
+(define-key esc-map "s" 're-search-forward)
+(define-key esc-map "%" 'replace-regexp)
+(defalias 'perl-mode 'cperl-mode)
+
+(setq calendar-latitude 61.5)
+(setq calendar-longitude 23.77)
+(setq calendar-location-name "Tampere, Finland")
+(set-time-zone-rule "EET")
+;; Maidenhead-lokaattori KP25RA81
+;; 65° 1' 15"N, 25° 27' 28"E
+;; 65° 00' 34"N, 25° 27' 52"E
+
+(setq
+ backup-by-copying t      ; don't clobber symlinks
+ backup-directory-alist
+
+ '(("." . "/d0/tmp/emacs-saves"))    ; don't litter my fs tree
+ delete-old-versions t
+ tramp-gvfs-enabled nil
+ kept-new-versions 6
+ kept-old-versions 2
+ epa-pinentry-mode 'loopback
+ scroll-margin 2
+ version-control t)       ; use versioned backups
+
+
+(setq european-calendar-style t)
+(setq font-lock-maximum-decoration 2)
+
+;; (defun cw ()
+;;   "Run the Perl syntax checker on this buffer."
+;;   (interactive)
+;;   (setq old-point (point))
+;;   (push-mark (point-min) t)
+;;   (goto-char (point-max))
+;;   (shell-command-on-region nil nil "perl -cw -I." nil)
+;;   (pop-mark)
+;;   (goto-char old-point))
+
+;; (define-key mode-specific-map "w" 'cw)
+
+;; (defun occur-subroutines ()
+;;   "Find all Perl subroutines in this buffer"
+;;   (interactive)
+;;   (let '(list-matching-lines-whole-buffer t)
+;;        (occur "^sub ")))
+;; (define-key mode-specific-map "s" 'occur-subroutines)
+
+;; (defun cw_save_check ()
+;;   "Run the Perl syntax checker on this buffer after saving."
+;;   (cond
+;;    ((equal mode-name "CPerl")
+;;     (progn
+;;       (save-current-buffer
+;; 	(set-buffer (get-buffer-create "*Perl cw output*"))
+;; 	(erase-buffer))
+;;       (call-process-region (point-min) (point-max) "/usr/bin/perl" nil "*Perl cw output*" nil "-c -I. /d0/localperl/lib/perl5")
+;;       (save-current-buffer
+;; 	(set-buffer "*Perl cw output*")
+;; 	(cond
+;; 	 ((equal (buffer-string) "- syntax OK\n") (message "%s" "Syntax OK"))
+;; 	 (t (message "%s" "Ohjelmassa on virheitä."))))))
+;;    (t nil)))
+
+;; (add-hook 'after-save-hook 'cw_save_check)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(connection-local-criteria-alist
+   '(((:application tramp)
+      tramp-connection-local-default-system-profile tramp-connection-local-default-shell-profile)))
+ '(connection-local-profile-alist
+   '((tramp-connection-local-darwin-ps-profile
+      (tramp-process-attributes-ps-args "-acxww" "-o" "pid,uid,user,gid,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "state=abcde" "-o" "ppid,pgid,sess,tty,tpgid,minflt,majflt,time,pri,nice,vsz,rss,etime,pcpu,pmem,args")
+      (tramp-process-attributes-ps-format
+       (pid . number)
+       (euid . number)
+       (user . string)
+       (egid . number)
+       (comm . 52)
+       (state . 5)
+       (ppid . number)
+       (pgrp . number)
+       (sess . number)
+       (ttname . string)
+       (tpgid . number)
+       (minflt . number)
+       (majflt . number)
+       (time . tramp-ps-time)
+       (pri . number)
+       (nice . number)
+       (vsize . number)
+       (rss . number)
+       (etime . tramp-ps-time)
+       (pcpu . number)
+       (pmem . number)
+       (args)))
+     (tramp-connection-local-busybox-ps-profile
+      (tramp-process-attributes-ps-args "-o" "pid,user,group,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "stat=abcde" "-o" "ppid,pgid,tty,time,nice,etime,args")
+      (tramp-process-attributes-ps-format
+       (pid . number)
+       (user . string)
+       (group . string)
+       (comm . 52)
+       (state . 5)
+       (ppid . number)
+       (pgrp . number)
+       (ttname . string)
+       (time . tramp-ps-time)
+       (nice . number)
+       (etime . tramp-ps-time)
+       (args)))
+     (tramp-connection-local-bsd-ps-profile
+      (tramp-process-attributes-ps-args "-acxww" "-o" "pid,euid,user,egid,egroup,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "state,ppid,pgid,sid,tty,tpgid,minflt,majflt,time,pri,nice,vsz,rss,etimes,pcpu,pmem,args")
+      (tramp-process-attributes-ps-format
+       (pid . number)
+       (euid . number)
+       (user . string)
+       (egid . number)
+       (group . string)
+       (comm . 52)
+       (state . string)
+       (ppid . number)
+       (pgrp . number)
+       (sess . number)
+       (ttname . string)
+       (tpgid . number)
+       (minflt . number)
+       (majflt . number)
+       (time . tramp-ps-time)
+       (pri . number)
+       (nice . number)
+       (vsize . number)
+       (rss . number)
+       (etime . number)
+       (pcpu . number)
+       (pmem . number)
+       (args)))
+     (tramp-connection-local-default-shell-profile
+      (shell-file-name . "/bin/sh")
+      (shell-command-switch . "-c"))
+     (tramp-connection-local-default-system-profile
+      (path-separator . ":")
+      (null-device . "/dev/null"))))
+ '(csv-separators '(";" "\11"))
+ '(custom-enabled-themes '(tango-dark))
+ '(file-coding-system-alist
+   '(("\\.tzst\\'" no-conversion . no-conversion)
+     ("\\.zst\\'" no-conversion . no-conversion)
+     ("\\.dz\\'" no-conversion . no-conversion)
+     ("\\.txz\\'" no-conversion . no-conversion)
+     ("\\.xz\\'" no-conversion . no-conversion)
+     ("\\.lzma\\'" no-conversion . no-conversion)
+     ("\\.lz\\'" no-conversion . no-conversion)
+     ("\\.g?z\\'" no-conversion . no-conversion)
+     ("\\.\\(?:tgz\\|svgz\\|sifz\\)\\'" no-conversion . no-conversion)
+     ("\\.tbz2?\\'" no-conversion . no-conversion)
+     ("\\.bz2\\'" no-conversion . no-conversion)
+     ("\\.Z\\'" no-conversion . no-conversion)
+     ("\\.elc\\'" . utf-8-emacs)
+     ("\\.el\\'" . prefer-utf-8)
+     ("\\.utf\\(-8\\)?\\'" . utf-8)
+     ("\\.xml\\'" . utf-8)
+     ("\\(\\`\\|/\\)loaddefs.el\\'" raw-text . raw-text-unix)
+     ("\\.tar\\'" no-conversion . no-conversion)
+     ("\\.po[tx]?\\'\\|\\.po\\." . po-find-file-coding-system)
+     ("\\.\\(tex\\|ltx\\|dtx\\|drv\\)\\'" . latexenc-find-file-coding-system)
+     ("" undecided)))
+ '(keyboard-coding-system 'utf-8-unix)
+ '(package-selected-packages
+   '(magit 0blayout magit-section flycheck-yamllint compat with-editor clojure-mode json-mode pinentry treemacs treemacs-all-the-icons treemacs-icons-dired ag selectrum selectrum-prescient markdown-mode markdown-preview-mode markdownfmt git-timemachine fira-code-mode clj-refactor discover-clj-refactor flycheck-clj-kondo org-journal graphviz-dot-mode paredit exec-path-from-shell yaml-mode csv-mode expand-region clojure-snippets company cider hydra))
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Fira Code" :foundry "CTDB" :slant normal :weight normal :height 137 :width normal)))))
+
+
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+(global-font-lock-mode 1)
+(global-set-key (kbd "C-x g") 'magit-status)
+(setq org-journal-dir "/home/shem/tex/journal")
+(require 'org-journal)
+(require 'compat)
+(add-hook 'org-journal-mode-hook 'turn-off-auto-fill)
+(setq cider-lein-command "/usr/bin/lein")
+
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(recentf-mode 1)
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-+") 'er/contract-region)
+(setq cider-show-error-buffer nil)
+
+(defun my-prettiness ()
+  "make some word or string show as pretty Unicode symbols"
+  (setq prettify-symbols-alist
+        '(
+          ("fn" . 955) 
+          ("->" . 8594)
+          ("->>" . 8608)
+          )))
+
+;;(add-hook 'clojure-mode-hook 'my-prettiness)
+;;(add-hook 'clojure-mode-hook 'prettify-symbols-mode)
+(require 'flycheck-clj-kondo)
+(require 'clj-refactor)
+(add-hook 'clojure-mode-hook (lambda ()
+                               (cider-mode 1)
+			       (paredit-mode 1)
+                               (clj-refactor-mode 1)
+                               (cljr-add-keybindings-with-prefix "C-c C-m")
+                               (flycheck-mode 1)
+                               ))
+(setq cider-default-cljs-repl 'figwheel)
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+(add-hook 'yaml-mode-hook 'turn-off-auto-fill)
+(add-hook 'after-init-hook 'global-company-mode)
+
+;; Tarvitaan magit + gpg-agent + ssh-agent -kombinaatioon
+(require 'exec-path-from-shell)
+(exec-path-from-shell-copy-env "SSH_AGENT_PID")
+(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+(global-fira-code-mode)
+
+(selectrum-mode +1)
+(selectrum-prescient-mode +1)
+(prescient-persist-mode +1)
