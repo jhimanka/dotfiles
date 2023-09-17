@@ -1,8 +1,9 @@
 ;; (setq  x-meta-keysym 'super
 ;;        x-super-keysym 'meta)
 
-;; Always end a file with a newline
-(setq require-final-newline t)
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
 
 (when (featurep 'native-compile)
   (setq native-comp-deferred-compilation t)
@@ -11,9 +12,6 @@
 
 ;; Stop at the end of the file, not just add lines
 (setq next-line-add-newlines nil)
-
-;;(global-unset-key "\C-h")
-;;(global-set-key "\C-h" 'delete-backward-char)
 
 (global-set-key [S-down] 'scroll-up-line)
 (global-set-key [S-up] 'scroll-down-line)
@@ -34,13 +32,14 @@
 (define-key esc-map "%" 'replace-regexp)
 (defalias 'perl-mode 'cperl-mode)
 
+(add-hook 'calendar-load-hook
+          (lambda ()
+            (calendar-set-date-style 'european)))
 (setq calendar-latitude 61.5)
 (setq calendar-longitude 23.77)
 (setq calendar-location-name "Tampere, Finland")
+(setq calendar-week-start-day 1)
 (set-time-zone-rule "EET")
-;; Maidenhead-lokaattori KP25RA81
-;; 65° 1' 15"N, 25° 27' 28"E
-;; 65° 00' 34"N, 25° 27' 52"E
 
 (setq
  backup-by-copying t      ; don't clobber symlinks
@@ -51,12 +50,11 @@
  tramp-gvfs-enabled nil
  kept-new-versions 6
  kept-old-versions 2
- epa-pinentry-mode 'loopback
+ epg-pinentry-mode 'loopback
  scroll-margin 2
  version-control t)       ; use versioned backups
 
 
-(setq european-calendar-style t)
 (setq font-lock-maximum-decoration 2)
 
 ;; (defun cw ()
@@ -71,12 +69,12 @@
 
 ;; (define-key mode-specific-map "w" 'cw)
 
-;; (defun occur-subroutines ()
-;;   "Find all Perl subroutines in this buffer"
-;;   (interactive)
-;;   (let '(list-matching-lines-whole-buffer t)
-;;        (occur "^sub ")))
-;; (define-key mode-specific-map "s" 'occur-subroutines)
+(defun occur-defns ()
+  "Find all Clojure defns in this buffer"
+  (interactive)
+  (let '(list-matching-lines-whole-buffer t)
+       (occur "defn ")))
+(define-key mode-specific-map "s" 'occur-defns)
 
 ;; (defun cw_save_check ()
 ;;   "Run the Perl syntax checker on this buffer after saving."
@@ -226,23 +224,20 @@
 (add-hook 'org-journal-mode-hook 'turn-off-auto-fill)
 (setq cider-lein-command "/usr/bin/lein")
 
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+
 (recentf-mode 1)
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
-(global-set-key (kbd "C-+") 'er/contract-region)
+(global-set-key (kbd "C--") 'er/contract-region)
 (setq cider-show-error-buffer nil)
 
-(defun my-prettiness ()
-  "make some word or string show as pretty Unicode symbols"
-  (setq prettify-symbols-alist
-        '(
-          ("fn" . 955) 
-          ("->" . 8594)
-          ("->>" . 8608)
-          )))
+;; (defun my-prettiness ()
+;;   "make some word or string show as pretty Unicode symbols"
+;;   (setq prettify-symbols-alist
+;;         '(
+;;           ("fn" . 955) 
+;;           ("->" . 8594)
+;;           ("->>" . 8608))))
 
 ;;(add-hook 'clojure-mode-hook 'my-prettiness)
 ;;(add-hook 'clojure-mode-hook 'prettify-symbols-mode)
@@ -253,8 +248,7 @@
 			       (paredit-mode 1)
                                (clj-refactor-mode 1)
                                (cljr-add-keybindings-with-prefix "C-c C-m")
-                               (flycheck-mode 1)
-                               ))
+                               (flycheck-mode 1)))
 (setq cider-default-cljs-repl 'figwheel)
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
@@ -267,6 +261,7 @@
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 (global-fira-code-mode)
 
+(which-key-mode)
 (selectrum-mode +1)
 (selectrum-prescient-mode +1)
 (prescient-persist-mode +1)
