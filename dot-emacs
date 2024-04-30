@@ -103,7 +103,8 @@
  ;; If there is more than one, they won't work right.
  '(blink-cursor-mode nil)
  '(connection-local-criteria-alist
-   '(((:application tramp :protocol "flatpak")
+   '(((:application eshell) eshell-connection-default-profile)
+     ((:application tramp :protocol "flatpak")
       tramp-flatpak-connection-local-default-profile)
      ((:application tramp :protocol "kubernetes")
       tramp-kubernetes-connection-local-default-profile)
@@ -111,7 +112,8 @@
       tramp-connection-local-default-system-profile
       tramp-connection-local-default-shell-profile)))
  '(connection-local-profile-alist
-   '((tramp-flatpak-connection-local-default-profile
+   '((eshell-connection-default-profile (eshell-path-env-list))
+     (tramp-flatpak-connection-local-default-profile
       (tramp-remote-path "/app/bin" tramp-default-remote-path "/bin"
 			 "/usr/bin" "/sbin" "/usr/sbin"
 			 "/usr/local/bin" "/usr/local/sbin"
@@ -224,11 +226,12 @@
      ("" undecided)))
  '(keyboard-coding-system 'utf-8-unix)
  '(package-selected-packages
-   '(0blayout ag cider clojure-mode clojure-snippets company
-	      company-terraform compat csv-mode exec-path-from-shell
-	      expand-region fira-code-mode flycheck-clj-kondo
-	      flycheck-yamllint git-timemachine graphviz-dot-mode
-	      hydra json-mode magit magit-section markdown-mode
+   '(0blayout ag cider clojure-mode clojure-snippets clojure-ts-mode
+	      company company-quickhelp company-terraform compat
+	      csv-mode editorconfig exec-path-from-shell expand-region
+	      fira-code-mode flycheck-clj-kondo flycheck-yamllint
+	      git-timemachine graphviz-dot-mode hydra json-mode
+	      lsp-mode magit magit-section markdown-mode
 	      markdown-preview-mode markdownfmt org-journal paredit
 	      pinentry selectrum selectrum-prescient terraform-doc
 	      terraform-mode treemacs treemacs-all-the-icons
@@ -273,10 +276,31 @@
 ;;(add-hook 'clojure-mode-hook 'my-prettiness)
 ;;(add-hook 'clojure-mode-hook 'prettify-symbols-mode)
 (require 'flycheck-clj-kondo)
-(add-hook 'clojure-mode-hook (lambda ()
-                               (cider-mode 1)
-			       (paredit-mode 1)
-                               (flycheck-mode 1)))
+;; (add-hook 'clojure-mode-hook (lambda ()
+;;                                (cider-mode 1)
+;; 			       (paredit-mode 1)
+;;                                (flycheck-mode 1)))
+(add-hook 'clojure-mode-hook #'paredit-mode)
+(add-hook 'clojurescript-mode-hook #'paredit-mode)
+(add-hook 'cider-repl-mode-hook #'paredit-mode)
+(add-hook 'clojure-mode-hook #'yas-minor-mode)
+(add-hook 'clojure-mode-hook
+          (lambda ()
+            (setq clojure-indent-style 'always-indent)
+            (setq comment-indent-function 'comment-indent-default)
+            (setq comment-add 0)
+            (comment-normalize-vars)))
+(add-hook 'clojurescript-mode-hook
+          (lambda ()
+            (setq clojure-indent-style 'always-indent)
+            (setq comment-indent-function 'comment-indent-default)
+            (setq comment-add 0)
+            (comment-normalize-vars)))
+(add-hook 'clojure-mode-hook #'lsp)
+(add-hook 'clojurescript-mode-hook 'lsp)
+(add-hook 'clojurec-mode-hook 'lsp)
+(add-hook 'clojure-ts-mode-hook #'cider-mode)
+
 (setq cider-default-cljs-repl 'figwheel)
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
@@ -287,6 +311,7 @@
 (require 'exec-path-from-shell)
 (exec-path-from-shell-copy-env "SSH_AGENT_PID")
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+(exec-path-from-shell-copy-env "PATH")
 (global-fira-code-mode)
 
 (which-key-mode)
@@ -294,3 +319,5 @@
 (selectrum-prescient-mode +1)
 (prescient-persist-mode +1)
 (put 'magit-clean 'disabled nil)
+
+(setq copilot-node-executable "/usr/bin/node")
